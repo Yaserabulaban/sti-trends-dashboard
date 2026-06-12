@@ -1,0 +1,54 @@
+{
+  "Gonorrhea": {
+    "Bacterial": [
+      "Antimicrobial resistance or decreased susceptibiity (DS/R) to antimicrobials in",
+      "Antimicrobial resistance or decreased susceptibiity (DS/R) to antimicrobials tes",
+      "Reported cases of gonorrhea (number)"
+    ]
+  },
+  "HIV": {
+    "Viral": [
+      "Antiretroviral therapy coverage among people with HIV infection eligible for ART",
+      "Antiretroviral therapy coverage among people with advanced HIV infection (%), WH",
+      "Deaths (thousands)",
+      "Deaths due to HIV/AIDS (per 100 000 population)",
+      "Deaths due to tuberculosis among HIV-negative people (per 100 000 population)",
+      "Estimated antiretroviral therapy coverage among people living with HIV (%)",
+      "Estimated number of pregnant women living with HIV",
+      "Estimated number of pregnant women living with HIV needing antiretrovirals for p",
+      "HIV tests performed where results were received by a person (testing volume), re",
+      "HIV-positive TB patients on ART (antiretroviral therapy) (%)",
+      "HIV-positive TB patients on CPT (co-trimoxazole preventive therapy) (%)",
+      "In-prison HIV diagnosis (number of diagnoses)",
+      "Incidence of tuberculosis (per 100 000 population) (HIV-positive cases)",
+      "New HIV infections (per 1000 uninfected population)",
+      "New infections (thousands)",
+      "Number of deaths due to tuberculosis, excluding HIV",
+      "Number of incident tuberculosis cases, (HIV-positive cases)",
+      "Number of pregnant women living with HIV who received antiretrovirals for preven",
+      "People living with HIV diagnosed with chronic hepatitis C infection (percent)",
+      "People living with HIV treated for chronic hepatitis C infection (percent)",
+      "People living with HIV who inject drugs, diagnosed with chronic hepatitis C infe",
+      "People living with HIV who inject drugs, treated for chronic hepatitis C infecti",
+      "Percentage of HIV-positive results returned to people in the calendar year",
+      "Prevalence adults 15-49 (%)",
+      "Prevalence of HIV among adults aged 15 to 49 (%)",
+      "TB patients with known HIV status (%)",
+      "Tested TB patients HIV-positive (%)",
+      "Treatment success rate: HIV-positive TB cases"
+    ]
+  },
+  "Syphilis": {
+    "Bacterial": [
+      "Antenatal care attendees positive for syphilis who received treatment (%), repor",
+      "Antenatal care attendees who were positive for syphilis (%), reported",
+      "Congenital syphilis number of cases, reported",
+      "Congenital syphilis rate per 100 000 live births, reported",
+      "Men who have sex with men: Syphilis prevalence (percent)",
+      "Reported cases of syphilis (number)",
+      "Sex workers: Syphilis prevalence (percent)",
+      "Transgender: Syphilis prevalence (percent)",
+      "Women accessing antenatal care (ANC) services who were tested for syphilis (%),"
+    ]
+  }
+}

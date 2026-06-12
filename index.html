@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global STI Trends Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="page-header">
+    <div>
+      <h1>Global STI Trends Dashboard</h1>
+      <p>Interactive SDG 3 monitoring of HIV, gonorrhea, and syphilis burden across countries, WHO regions, and time.</p>
+    </div>
+    <div class="status-pill" id="mode-label">Loading data</div>
+  </header>
+
+  <main>
+    <section class="filter-panel" aria-label="Dashboard filters">
+      <label>
+        <span>Metric / Indicator</span>
+        <select id="metric-filter"></select>
+      </label>
+      <label>
+        <span>Disease</span>
+        <select id="disease-filter"></select>
+      </label>
+      <label>
+        <span>Disease Type</span>
+        <select id="disease-type-filter"></select>
+      </label>
+      <label>
+        <span>Year</span>
+        <select id="year-filter"></select>
+      </label>
+      <label>
+        <span>From</span>
+        <input id="year-start-filter" type="number" min="1990" max="2024" step="1">
+      </label>
+      <label>
+        <span>To</span>
+        <input id="year-end-filter" type="number" min="1990" max="2024" step="1">
+      </label>
+      <label>
+        <span>Country</span>
+        <select id="country-filter"></select>
+      </label>
+      <label>
+        <span>WHO Region</span>
+        <select id="region-filter"></select>
+      </label>
+      <label>
+        <span>Burden Tier</span>
+        <select id="tier-filter"></select>
+      </label>
+      <button id="reset-filters" type="button">Reset Filters</button>
+    </section>
+
+    <section class="kpi-grid" id="kpi-cards" aria-label="KPI cards"></section>
+
+    <section class="chart-grid">
+      <article class="chart-panel map-panel">
+        <div class="chart-heading">
+          <div>
+            <h2>Choropleth World Map</h2>
+            <p id="map-subtitle"></p>
+          </div>
+          <button class="small-button" id="map-reset" type="button">Reset Zoom</button>
+        </div>
+        <div class="chart-body map-body" id="choropleth-map"></div>
+      </article>
+
+      <article class="chart-panel">
+        <div class="chart-heading">
+          <div>
+            <h2>Ranked Country Bar Chart</h2>
+            <p id="bar-subtitle"></p>
+          </div>
+        </div>
+        <div class="chart-body" id="ranked-bar-chart"></div>
+      </article>
+
+      <article class="chart-panel wide-panel">
+        <div class="chart-heading">
+          <div>
+            <h2>Multi-Line Time-Series Chart</h2>
+            <p id="time-subtitle"></p>
+          </div>
+        </div>
+        <div class="chart-body" id="time-series-chart"></div>
+      </article>
+
+      <article class="chart-panel wide-panel">
+        <div class="chart-heading">
+          <div>
+            <h2>Animated Bubble Chart</h2>
+            <p id="bubble-subtitle"></p>
+          </div>
+        </div>
+        <div class="bubble-controls">
+          <button id="bubble-play" type="button">Play</button>
+          <button id="bubble-pause" type="button">Pause</button>
+          <input id="bubble-year-slider" type="range" min="1990" max="2024" step="1">
+          <span id="bubble-year-label">2024</span>
+        </div>
+        <div class="chart-body" id="animated-bubble-chart"></div>
+      </article>
+
+      <article class="chart-panel">
+        <div class="chart-heading">
+          <div>
+            <h2>Year-over-Year Lollipop Chart</h2>
+            <p id="lollipop-subtitle"></p>
+          </div>
+        </div>
+        <div class="chart-body" id="lollipop-chart"></div>
+      </article>
+
+      <article class="chart-panel">
+        <div class="chart-heading">
+          <div>
+            <h2>Disease Share Donut Chart</h2>
+            <p id="donut-subtitle">Disease Share by Normalized Burden Score</p>
+          </div>
+        </div>
+        <div class="chart-body" id="donut-chart"></div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="page-footer">
+    <p>Dataset source: WHO Global Health Observatory-derived STI intelligence dataset. Disease share and cross-disease views use normalized burden scores to avoid silently comparing incompatible raw metrics.</p>
+    <p>Hint: click countries, ranked bars, or donut segments to link charts; drag or scroll the map to pan and zoom.</p>
+  </footer>
+
+  <div id="tooltip" class="tooltip" role="status" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+data/raw/
+node_modules/
+.DS_Store
+Thumbs.db
+*.pyc
+__pycache__/
+.venv/
+venv/
+.pytest_cache/
+.edge-profile/
+docs/HANDOFF_TO_CHATGPT.md

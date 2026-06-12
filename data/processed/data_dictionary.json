@@ -1,0 +1,31 @@
+{
+  "dataset": "Global STI Trends Dashboard cleaned dataset",
+  "source_file": "data/raw/global_sti_intelligence_hiv_gonorrhea_syphilis.csv",
+  "year_filter": "Rows are limited to 1990 through 2024.",
+  "fields": {
+    "disease": "STI disease group: HIV, Gonorrhea, or Syphilis.",
+    "disease_type": "Disease category such as viral or bacterial.",
+    "metric": "Indicator/metric name used for raw-value comparisons.",
+    "country_code": "ISO alpha-3 country code where available.",
+    "country_alpha2": "ISO alpha-2 country code where available.",
+    "country_name": "Country or territory name.",
+    "who_region": "WHO region label.",
+    "year": "Observation year.",
+    "value": "Cleaned numeric metric value.",
+    "value_low": "Cleaned lower confidence interval value if available.",
+    "value_high": "Cleaned upper confidence interval value if available.",
+    "ci_width": "Cleaned confidence interval width if available.",
+    "burden_tier": "Standardized burden category: LOW, MEDIUM, HIGH, VERY HIGH, or UNKNOWN.",
+    "value_prev_year": "Previous-year value for the same series if available.",
+    "yoy_change_abs": "Absolute year-over-year change if available.",
+    "yoy_change_pct": "Percent year-over-year change if available.",
+    "yoy_direction": "Original direction label for year-over-year change.",
+    "normalized_score": "Derived value divided by max value within each disease + metric group, capped from 0 to 1.",
+    "burden_tier_score": "Derived numeric tier score: LOW=1, MEDIUM=2, HIGH=3, VERY HIGH=4, UNKNOWN=null."
+  },
+  "comparison_rules": [
+    "Use raw value only when a specific compatible metric is selected.",
+    "Use normalized_score for Disease=All, disease share, and dominant disease comparisons.",
+    "Do not silently compare incompatible raw metrics across diseases."
+  ]
+}
