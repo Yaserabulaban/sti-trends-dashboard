@@ -136,6 +136,14 @@ button:disabled {
   background: #edf3f8;
   color: var(--accent);
   border-color: #cfe0ed;
+  white-space: nowrap;
+}
+
+.chart-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 .kpi-grid {

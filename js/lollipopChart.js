@@ -1,3 +1,4 @@
+import { setState } from "./state.js";
 import { chartSvg, emptyState, formatCompactPercent, formatValue, getValueLabel, matchesFilters, tooltipRows } from "./utils.js";
 import { hideTooltip, moveTooltip, showTooltip } from "./tooltip.js";
 
@@ -57,8 +58,11 @@ export function renderLollipopChart(rows, state) {
     .join("circle")
     .attr("cx", (d) => x(d.yoy))
     .attr("cy", (d) => y(d.country) + y.bandwidth() / 2)
-    .attr("r", 6)
+    .attr("r", (d) => d.country === state.selectedCountry ? 8 : 6)
     .attr("fill", (d) => d.yoy >= 0 ? "#c8543b" : "#268b5f")
+    .attr("stroke", (d) => d.country === state.selectedCountry ? "#111827" : "#ffffff")
+    .attr("stroke-width", (d) => d.country === state.selectedCountry ? 2.5 : 1)
+    .attr("cursor", "pointer")
     .on("mousemove", (event, d) => {
       showTooltip(event, `<strong>${d.country}</strong>${tooltipRows([
         ["Previous Value", d.prev === undefined ? "Unavailable" : formatValue(d.prev)],
@@ -66,8 +70,10 @@ export function renderLollipopChart(rows, state) {
         ["YoY Change", formatCompactPercent(d.yoy)],
         ["Direction", d.row.yoyDirection],
         ["Metric", getValueLabel(state)],
+        ["Click", "Select country"],
       ])}`);
       moveTooltip(event);
     })
-    .on("mouseout", hideTooltip);
+    .on("mouseout", hideTooltip)
+    .on("click", (event, d) => setState({ selectedCountry: d.country, country: d.country }));
 }

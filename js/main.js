@@ -6,7 +6,7 @@ import { initFilters, renderFilters } from "./filters.js";
 import { initKpiCards, renderKpiCards } from "./kpiCards.js";
 import { renderLollipopChart } from "./lollipopChart.js";
 import { renderRankedBarChart } from "./rankedBarChart.js";
-import { dashboardState, subscribe } from "./state.js";
+import { dashboardState, resetState, subscribe } from "./state.js";
 import { renderTimeSeriesChart } from "./timeSeriesChart.js";
 import { getValueLabel } from "./utils.js";
 import { initTooltip } from "./tooltip.js";
@@ -24,11 +24,16 @@ async function start() {
   initKpiCards();
   initChoroplethMap();
   initAnimatedBubbleChart();
+  initChartClearFilters();
   applyInitialQueryParams(dashboardData.rows);
 
   subscribe(renderAll);
   renderAll();
   window.addEventListener("resize", debounce(renderAll, 160));
+}
+
+function initChartClearFilters() {
+  d3.selectAll(".chart-clear-filters").on("click", () => resetState());
 }
 
 function renderAll() {

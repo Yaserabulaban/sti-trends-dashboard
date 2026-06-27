@@ -66,7 +66,10 @@
             <h2>Choropleth World Map</h2>
             <p id="map-subtitle"></p>
           </div>
-          <button class="small-button" id="map-reset" type="button">Reset Zoom</button>
+          <div class="chart-actions">
+            <button class="small-button" id="map-reset" type="button">Reset Zoom</button>
+            <button class="small-button chart-clear-filters" type="button">Clear Filters</button>
+          </div>
         </div>
         <div class="chart-body map-body" id="choropleth-map"></div>
       </article>
@@ -77,6 +80,7 @@
             <h2>Ranked Country Bar Chart</h2>
             <p id="bar-subtitle"></p>
           </div>
+          <button class="small-button chart-clear-filters" type="button">Clear Filters</button>
         </div>
         <div class="chart-body" id="ranked-bar-chart"></div>
       </article>
@@ -87,7 +91,10 @@
             <h2>Multi-Line Time-Series Chart</h2>
             <p id="time-subtitle"></p>
           </div>
-          <button class="small-button" id="time-reset-range" type="button">Reset Range</button>
+          <div class="chart-actions">
+            <button class="small-button" id="time-reset-range" type="button">Reset Range</button>
+            <button class="small-button chart-clear-filters" type="button">Clear Filters</button>
+          </div>
         </div>
         <div class="chart-body" id="time-series-chart"></div>
       </article>
@@ -98,6 +105,7 @@
             <h2>Animated Bubble Chart</h2>
             <p id="bubble-subtitle"></p>
           </div>
+          <button class="small-button chart-clear-filters" type="button">Clear Filters</button>
         </div>
         <div class="bubble-controls">
           <button id="bubble-play" type="button">Play</button>
@@ -114,6 +122,7 @@
             <h2>Year-over-Year Lollipop Chart</h2>
             <p id="lollipop-subtitle"></p>
           </div>
+          <button class="small-button chart-clear-filters" type="button">Clear Filters</button>
         </div>
         <div class="chart-body" id="lollipop-chart"></div>
       </article>
@@ -124,6 +133,7 @@
             <h2>Disease Share Donut Chart</h2>
             <p id="donut-subtitle">Disease Share by Normalized Burden Score</p>
           </div>
+          <button class="small-button chart-clear-filters" type="button">Clear Filters</button>
         </div>
         <div class="chart-body" id="donut-chart"></div>
       </article>
