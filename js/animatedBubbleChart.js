@@ -96,7 +96,10 @@ export function renderAnimatedBubbleChart(rows, state) {
     ? ["HIV", "Gonorrhea", "Syphilis"]
     : uniqueSorted(bubbles.map((item) => item.row.whoRegion));
   const legendColor = isDiseaseColorMode ? (item) => diseaseColors.get(item) || "#1261a0" : (item) => regionColors(item);
-  drawBubbleLegend(svg, legendItems, legendColor, isDiseaseColorMode ? "Color: Disease" : "Color: WHO Region", margin.left + innerWidth + 18, margin.top + 8);
+  const legendX = margin.left + innerWidth + 18;
+  const legendY = margin.top + 8;
+  drawBubbleLegend(svg, legendItems, legendColor, isDiseaseColorMode ? "Color: Disease" : "Color: WHO Region", legendX, legendY);
+  drawSizeLegend(svg, bubbles, r, getValueLabel(state) === "Normalized Burden Score" ? "Normalized Score" : "Selected Value", legendX, legendY + 130);
 }
 
 function drawBubbleLegend(svg, items, color, title, x, y) {
@@ -126,6 +129,48 @@ function drawBubbleLegend(svg, items, color, title, x, y) {
     .text((d) => d);
 }
 
+function drawSizeLegend(svg, bubbles, radiusScale, title, x, y) {
+  const maxValue = d3.max(bubbles, (d) => d.value) || 1;
+  const values = [maxValue * 0.25, maxValue * 0.55, maxValue].filter((value, index, arr) => value > 0 && arr.indexOf(value) === index);
+  const maxRadius = radiusScale(maxValue);
+  const legend = svg.append("g")
+    .attr("class", "legend bubble-size-legend")
+    .attr("transform", `translate(${x},${y})`);
+
+  legend.append("text")
+    .attr("class", "chart-title-note")
+    .attr("font-weight", 800)
+    .attr("y", 0)
+    .text(`Size: ${title}`);
+
+  const baseY = 78;
+  const rows = legend.selectAll(".bubble-size-item")
+    .data(values)
+    .join("g")
+    .attr("class", "bubble-size-item")
+    .attr("transform", (d, i) => `translate(${i * 42},0)`);
+
+  rows.append("circle")
+    .attr("cx", maxRadius)
+    .attr("cy", (d) => baseY - radiusScale(d))
+    .attr("r", (d) => radiusScale(d))
+    .attr("fill", "none")
+    .attr("stroke", "#718096")
+    .attr("stroke-width", 1.2);
+
+  rows.append("line")
+    .attr("x1", maxRadius)
+    .attr("x2", maxRadius + 24)
+    .attr("y1", (d) => baseY - radiusScale(d) * 2)
+    .attr("y2", (d) => baseY - radiusScale(d) * 2)
+    .attr("stroke", "#a0aec0")
+    .attr("stroke-dasharray", "3 2");
+
+  rows.append("text")
+    .attr("x", maxRadius + 28)
+    .attr("y", (d) => baseY - radiusScale(d) * 2 + 4)
+    .text((d) => formatValue(d));
+}
 function stopTimer() {
   if (timer) clearInterval(timer);
   timer = null;
