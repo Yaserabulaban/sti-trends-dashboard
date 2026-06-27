@@ -114,7 +114,12 @@ export function selectedMetricSubtitle(state) {
 }
 
 export function tooltipRows(rows) {
-  return rows.map(([label, value]) => `<div><b>${label}:</b> ${value ?? "Unavailable"}</div>`).join("");
+  return `<div class="tooltip-grid">${rows.map(([label, value]) => `
+    <div class="tooltip-row">
+      <span class="tooltip-label">${label}</span>
+      <span class="tooltip-value">${value ?? "Unavailable"}</span>
+    </div>
+  `).join("")}</div>`;
 }
 
 export function countryKey(feature) {

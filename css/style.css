@@ -124,6 +124,12 @@ button:hover {
   filter: brightness(0.94);
 }
 
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  filter: none;
+}
+
 .small-button {
   width: auto;
   min-height: 32px;
@@ -276,25 +282,71 @@ svg {
 
 .tooltip {
   position: fixed;
+  top: 0;
+  left: 0;
   z-index: 20;
   pointer-events: none;
-  max-width: min(320px, calc(100vw - 24px));
-  padding: 10px 12px;
-  background: #fff;
-  border: 1px solid var(--line);
+  width: max-content;
+  max-width: min(360px, calc(100vw - 24px));
+  padding: 0;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #bfd2e2;
   border-radius: 8px;
   color: var(--ink);
-  box-shadow: 0 14px 34px rgba(23, 32, 42, 0.18);
+  box-shadow: 0 18px 42px rgba(18, 39, 63, 0.24);
   font-size: 12px;
   line-height: 1.35;
   opacity: 0;
   transform: translate(-9999px, -9999px);
 }
 
+.tooltip::before {
+  content: "";
+  display: block;
+  height: 4px;
+  background: linear-gradient(90deg, var(--hiv), var(--accent-2), var(--syphilis));
+}
+
 .tooltip strong {
   display: block;
-  margin-bottom: 4px;
+  padding: 10px 12px 7px;
+  background: #f3f7fb;
+  border-bottom: 1px solid #d9e5ee;
+  color: #10243a;
   font-size: 13px;
+  font-weight: 800;
+}
+
+.tooltip-grid {
+  display: grid;
+  gap: 0;
+  padding: 6px 0;
+}
+
+.tooltip-row {
+  display: grid;
+  grid-template-columns: minmax(92px, auto) minmax(110px, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 5px 12px;
+}
+
+.tooltip-row + .tooltip-row {
+  border-top: 1px solid #eef3f7;
+}
+
+.tooltip-label {
+  color: var(--muted);
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+.tooltip-value {
+  color: var(--ink);
+  font-weight: 650;
+  text-align: right;
+  overflow-wrap: anywhere;
 }
 
 .page-footer {
