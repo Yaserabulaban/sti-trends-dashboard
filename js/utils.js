@@ -99,14 +99,44 @@ export function chartSvg(containerSelector, height = 340, margin = { top: 18, ri
   return { svg, width, height, margin, innerWidth: width - margin.left - margin.right, innerHeight: height - margin.top - margin.bottom };
 }
 
-export function emptyState(containerSelector, message) {
+export function emptyState(containerSelector, message, detail = "Try another metric, year, or reset filters.") {
   const { svg, width, height } = chartSvg(containerSelector, 320, { top: 0, right: 0, bottom: 0, left: 0 });
-  svg.append("text")
+  const lines = [
+    ...wrapText(message, 82).map((text) => ({ text, className: "empty-state-title" })),
+    ...wrapText(detail, 86).map((text) => ({ text, className: "empty-state-detail" })),
+  ];
+
+  const text = svg.append("text")
     .attr("x", width / 2)
-    .attr("y", height / 2)
+    .attr("y", height / 2 - (lines.length - 1) * 10)
     .attr("text-anchor", "middle")
-    .attr("class", "empty-state")
-    .text(message);
+    .attr("class", "empty-state");
+
+  text.selectAll("tspan")
+    .data(lines)
+    .join("tspan")
+    .attr("x", width / 2)
+    .attr("dy", (d, i) => i === 0 ? 0 : 22)
+    .attr("class", (d) => d.className)
+    .text((d) => d.text);
+}
+
+function wrapText(text, maxLength) {
+  if (!text) return [];
+  const words = String(text).split(" ");
+  const lines = [];
+  let line = "";
+  words.forEach((word) => {
+    const next = line ? `${line} ${word}` : word;
+    if (next.length > maxLength && line) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = next;
+    }
+  });
+  if (line) lines.push(line);
+  return lines;
 }
 
 export function selectedMetricSubtitle(state) {

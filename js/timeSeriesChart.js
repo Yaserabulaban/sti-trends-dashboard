@@ -23,7 +23,11 @@ export function renderTimeSeriesChart(rows, state) {
   })).filter((series) => series.values.length > 1);
 
   if (!nested.length) {
-    emptyState("#time-series-chart", "No time-series data for current filters");
+    emptyState(
+      "#time-series-chart",
+      `No time-series data for ${getValueLabel(state)} from ${state.yearRange[0]}-${state.yearRange[1]}.`,
+      "Try widening the year range or changing disease/metric filters.",
+    );
     return;
   }
 

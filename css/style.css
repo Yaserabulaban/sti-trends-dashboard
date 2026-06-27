@@ -270,6 +270,17 @@ svg {
   font-size: 13px;
 }
 
+.empty-state-title {
+  fill: var(--ink);
+  font-size: 14px;
+  font-weight: 760;
+}
+
+.empty-state-detail {
+  fill: var(--muted);
+  font-size: 12px;
+}
+
 .legend text {
   fill: var(--muted);
   font-size: 11px;

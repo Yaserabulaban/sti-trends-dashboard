@@ -1,5 +1,5 @@
 import { setState } from "./state.js";
-import { chartSvg, diseaseColors, emptyState, formatNumber, matchesFilters, tooltipRows } from "./utils.js";
+import { chartSvg, diseaseColors, emptyState, formatNumber, getValueLabel, matchesFilters, tooltipRows } from "./utils.js";
 import { hideTooltip, moveTooltip, showTooltip } from "./tooltip.js";
 
 const diseases = ["HIV", "Gonorrhea", "Syphilis"];
@@ -14,7 +14,7 @@ export function renderDonutChart(rows, state) {
   const total = d3.sum(totals, (d) => d.value);
 
   if (!total) {
-    emptyState("#donut-chart", "No normalized disease-share data for current filters");
+    emptyState("#donut-chart", `No disease-share data for ${getValueLabel(state)} in ${state.year}.`, "Try another disease, metric, year, or reset filters.");
     return;
   }
 

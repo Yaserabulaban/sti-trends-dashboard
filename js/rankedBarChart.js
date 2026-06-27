@@ -18,7 +18,11 @@ export function renderRankedBarChart(rows, state) {
     .slice(0, 15);
 
   if (!ranked.length) {
-    emptyState("#ranked-bar-chart", "No ranked country data for current filters");
+    emptyState(
+      "#ranked-bar-chart",
+      `No ranked country data for ${getValueLabel(state)} in ${state.year}.`,
+      "Try another disease, metric, region, burden tier, or reset filters.",
+    );
     return;
   }
 

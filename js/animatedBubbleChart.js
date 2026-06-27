@@ -43,7 +43,11 @@ export function renderAnimatedBubbleChart(rows, state) {
     .slice(0, 80);
 
   if (!bubbles.length) {
-    emptyState("#animated-bubble-chart", "No bubble data for current filters");
+    emptyState(
+      "#animated-bubble-chart",
+      `No bubble data for ${state.disease} in ${state.year} using ${getValueLabel(state)}.`,
+      "Try another metric, year, disease, or reset filters.",
+    );
     return;
   }
 

@@ -20,7 +20,11 @@ export function renderLollipopChart(rows, state) {
   const data = [...improving, ...worsening];
 
   if (!data.length) {
-    emptyState("#lollipop-chart", "No valid YoY values for current filters");
+    emptyState(
+      "#lollipop-chart",
+      `No valid YoY values for ${getValueLabel(state)} in ${state.year}.`,
+      "Try another metric, disease, year, or reset filters.",
+    );
     return;
   }
 
