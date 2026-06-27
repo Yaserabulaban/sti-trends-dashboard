@@ -1,9 +1,9 @@
 import { setState } from "./state.js";
-import { chartSvg, emptyState, filteredRows, formatValue, getRowValue, getValueLabel, tooltipRows } from "./utils.js";
+import { chartContextSubtitle, chartSvg, emptyState, filteredRows, formatValue, getRowValue, getValueLabel, tooltipRows } from "./utils.js";
 import { hideTooltip, moveTooltip, showTooltip } from "./tooltip.js";
 
 export function renderRankedBarChart(rows, state) {
-  d3.select("#bar-subtitle").text(`Top 15 countries | ${getValueLabel(state)} | ${state.year}`);
+  d3.select("#bar-subtitle").text(`Top 15 countries | ${chartContextSubtitle(state)}`);
   const current = filteredRows(rows, state, { includeCountry: false, includeSelectedCountry: false });
   const ranked = d3.rollups(
     current,

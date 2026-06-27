@@ -143,6 +143,22 @@ export function selectedMetricSubtitle(state) {
   return `${getValueLabel(state)} | ${state.year} | ${getActiveDisease(state)} | ${getActiveCountry(state) || state.whoRegion}`;
 }
 
+export function chartContextSubtitle(state, options = {}) {
+  const { yearRange = false, groupMode = null, includeMode = true } = options;
+  const parts = [];
+  if (includeMode) parts.push(getValueLabel(state));
+  parts.push(yearRange ? `${state.yearRange[0]}-${state.yearRange[1]}` : String(state.year));
+  if (groupMode) parts.push(`Grouped by ${groupMode}`);
+  const activeDisease = getActiveDisease(state);
+  if (activeDisease !== "All") parts.push(`Disease: ${activeDisease}`);
+  if (state.diseaseType !== "All") parts.push(`Type: ${state.diseaseType}`);
+  const activeCountry = getActiveCountry(state);
+  if (activeCountry) parts.push(`Country: ${activeCountry}`);
+  if (state.whoRegion !== "All") parts.push(`Region: ${state.whoRegion}`);
+  if (state.burdenTier !== "All") parts.push(`Tier: ${state.burdenTier}`);
+  return parts.join(" | ");
+}
+
 export function tooltipRows(rows) {
   return `<div class="tooltip-grid">${rows.map(([label, value]) => `
     <div class="tooltip-row">

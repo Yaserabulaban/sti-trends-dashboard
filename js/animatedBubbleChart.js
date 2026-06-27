@@ -1,5 +1,5 @@
 import { setState } from "./state.js";
-import { chartSvg, diseaseColors, emptyState, filteredRows, formatCompactPercent, formatValue, getRowValue, getValueLabel, regionColors, tooltipRows, uniqueSorted } from "./utils.js";
+import { chartContextSubtitle, chartSvg, diseaseColors, emptyState, filteredRows, formatCompactPercent, formatValue, getRowValue, getValueLabel, regionColors, tooltipRows, uniqueSorted } from "./utils.js";
 import { hideTooltip, moveTooltip, showTooltip } from "./tooltip.js";
 
 let timer = null;
@@ -25,7 +25,7 @@ export function initAnimatedBubbleChart() {
 export function renderAnimatedBubbleChart(rows, state) {
   d3.select("#bubble-year-slider").property("value", state.year);
   d3.select("#bubble-year-label").text(state.year);
-  d3.select("#bubble-subtitle").text(`${getValueLabel(state)} vs YoY change | ${state.year}`);
+  d3.select("#bubble-subtitle").text(`Bubble size and position | ${chartContextSubtitle(state)}`);
 
   const current = filteredRows(rows, state, { includeSelectedCountry: false });
   const bubbles = d3.rollups(

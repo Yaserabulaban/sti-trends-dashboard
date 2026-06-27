@@ -1,5 +1,5 @@
 import { setState } from "./state.js";
-import { chartSvg, emptyState, filteredRows, formatValue, getActiveCountry, getRowValue, getValueLabel, tooltipRows, diseaseColors, regionColors } from "./utils.js";
+import { chartContextSubtitle, chartSvg, emptyState, filteredRows, formatValue, getActiveCountry, getRowValue, getValueLabel, tooltipRows, diseaseColors, regionColors } from "./utils.js";
 import { hideTooltip, moveTooltip, showTooltip } from "./tooltip.js";
 
 export function renderTimeSeriesChart(rows, state) {
@@ -9,7 +9,7 @@ export function renderTimeSeriesChart(rows, state) {
 
   const activeCountry = getActiveCountry(state);
   const groupMode = activeCountry ? "disease" : state.disease !== "All" ? "region" : "disease";
-  d3.select("#time-subtitle").text(`${getValueLabel(state)} trends | ${state.yearRange[0]}-${state.yearRange[1]} | grouped by ${groupMode}`);
+  d3.select("#time-subtitle").text(`Trends | ${chartContextSubtitle(state, { yearRange: true, groupMode })}`);
   const current = filteredRows(rows, state, { includeYear: false, includeYearRange: true });
 
   const nested = d3.rollups(

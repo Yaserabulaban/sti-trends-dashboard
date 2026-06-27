@@ -1,11 +1,11 @@
 import { setState } from "./state.js";
-import { chartSvg, diseaseColors, emptyState, formatNumber, getValueLabel, matchesFilters, tooltipRows } from "./utils.js";
+import { chartContextSubtitle, chartSvg, diseaseColors, emptyState, formatNumber, getValueLabel, matchesFilters, tooltipRows } from "./utils.js";
 import { hideTooltip, moveTooltip, showTooltip } from "./tooltip.js";
 
 const diseases = ["HIV", "Gonorrhea", "Syphilis"];
 
 export function renderDonutChart(rows, state) {
-  d3.select("#donut-subtitle").text("Disease Share by Normalized Burden Score");
+  d3.select("#donut-subtitle").text(`Disease share | ${chartContextSubtitle(state)}`);
   const current = rows.filter((row) => matchesFilters(row, state, { includeDisease: false }) && row.normalizedScore !== null);
   const totals = diseases.map((disease) => ({
     disease,

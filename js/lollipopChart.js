@@ -1,9 +1,9 @@
 import { setState } from "./state.js";
-import { chartSvg, emptyState, formatCompactPercent, formatValue, getValueLabel, matchesFilters, tooltipRows } from "./utils.js";
+import { chartContextSubtitle, chartSvg, emptyState, formatCompactPercent, formatValue, getValueLabel, matchesFilters, tooltipRows } from "./utils.js";
 import { hideTooltip, moveTooltip, showTooltip } from "./tooltip.js";
 
 export function renderLollipopChart(rows, state) {
-  d3.select("#lollipop-subtitle").text(`Fastest worsening and improving | ${state.year} | ${getValueLabel(state)}`);
+  d3.select("#lollipop-subtitle").text(`Fastest worsening and improving | ${chartContextSubtitle(state)}`);
   const current = rows.filter((row) => matchesFilters(row, state) && row.yoyChangePct !== null && Number.isFinite(row.yoyChangePct));
   const grouped = d3.rollups(
     current,

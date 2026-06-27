@@ -1,5 +1,5 @@
 import { setState } from "./state.js";
-import { countryKey, filteredRows, formatValue, getRowValue, getValueLabel, tooltipRows } from "./utils.js";
+import { chartContextSubtitle, countryKey, filteredRows, formatValue, getRowValue, getValueLabel, tooltipRows } from "./utils.js";
 import { hideTooltip, moveTooltip, showTooltip } from "./tooltip.js";
 
 let resetZoom = () => {};
@@ -11,7 +11,7 @@ export function initChoroplethMap() {
 export function renderChoroplethMap(rows, world, state) {
   const container = d3.select("#choropleth-map");
   container.selectAll("*").remove();
-  d3.select("#map-subtitle").text(`${getValueLabel(state)} by country | ${state.year}`);
+  d3.select("#map-subtitle").text(`Country burden map | ${chartContextSubtitle(state)}`);
 
   const width = Math.max(640, container.node().clientWidth || 900);
   const height = 470;
