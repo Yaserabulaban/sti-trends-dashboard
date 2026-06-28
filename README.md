@@ -1,4 +1,4 @@
-# Global STI Trends Dashboard
+﻿# Global STI Trends Dashboard
 
 Interactive single-page D3 dashboard for monitoring HIV, gonorrhea, and syphilis burden worldwide under **SDG 3: Good Health & Well-being**.
 
@@ -287,24 +287,56 @@ The raw CSV should stay in `data/raw/` and is ignored from Git. Use the processe
 ## Dashboard Features
 
 - Global filters for metric, disease, disease type, year, year range, country, WHO region, and burden tier
+- Global reset button plus chart-level `Clear Filters` buttons for faster demo recovery
 - KPI cards for global burden score, highest burden country, lowest burden country, dominant disease, fastest worsening country, and fastest improving country
 - Shared dashboard state across all filters and charts
-- Reusable tooltip component across visualizations
-- Linked country selection across map, bar chart, bubble chart, time series, lollipop chart, and KPIs
-- Donut segment click to filter by disease
-- Choropleth map zoom and pan
-- Time-series brush for year-range focus
-- Animated bubble chart with play, pause, and year slider
+- Reusable custom tooltip component across all visualizations
+- Short interaction hints on every chart to support grading and live demonstration
+- Linked country selection across map, ranked bar chart, animated bubble chart, lollipop chart, time-series context, and KPI cards
+- Donut segment click to filter by disease globally
+- Choropleth map zoom and pan with a `Reset Zoom` control
+- Time-series brush for year-range focus with a `Reset Range` control
+- Animated bubble chart with play, pause, year slider, color legend, and bubble-size legend
+- Empty-state messages when a filter combination has no chart-ready data
 - Responsive CSS grid layout for laptop and smaller screens
 
 ## Visualizations
 
-1. Choropleth World Map
-2. Ranked Country Bar Chart
-3. Multi-Line Time-Series Chart
-4. Animated Bubble Chart
-5. Year-over-Year Lollipop Chart
-6. Disease Share Donut Chart
+1. Choropleth World Map: spatial burden comparison by country with zoom, pan, country tooltip, country selection, reset zoom, and chart-level filter clearing.
+2. Ranked Country Bar Chart: top 15 countries for the selected metric or normalized burden score with custom tooltip and click-to-select country interaction.
+3. Multi-Line Time-Series Chart: 1990-2024 trend view grouped by disease or WHO region with custom point tooltips, brush-based year focusing, reset range, and external legend placement.
+4. Animated Bubble Chart: temporal country-level animation with play/pause, year slider, color legend, bubble-size legend, custom tooltip, and click-to-select country interaction.
+5. Year-over-Year Lollipop Chart: fastest worsening and fastest improving countries using `yoy_change_pct`, including zero baseline, custom tooltip, and click-to-select country interaction.
+6. Disease Share Donut Chart: relative disease contribution using normalized burden score with custom tooltip and click-to-filter disease interaction.
+
+## Screenshots and Report Assets
+
+Dashboard screenshots are stored in `docs/screenshots/` for report writing and presentation preparation:
+
+- `full-dashboard.png`
+- `full-dashboard-tall.png`
+- `filters-kpis.png`
+- `choropleth-map.png`
+- `ranked-bar-chart.png`
+- `time-series-chart.png`
+- `animated-bubble-chart.png`
+- `lollipop-chart.png`
+- `donut-chart.png`
+- `linked-interaction-south-africa.png`
+
+The current report draft is stored in:
+
+```text
+report/1221305612_1221305898_1221305145.docx
+```
+
+The local ChatGPT report handoff prompt is stored in:
+
+```text
+docs/HANDOFF_TO_CHATGPT.md
+```
+
+Note: `docs/HANDOFF_TO_CHATGPT.md` is a local writing helper and is ignored from Git unless the team decides to include it.
 
 ## Normalized Burden Score
 

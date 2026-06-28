@@ -1,4 +1,4 @@
-data/raw/
+﻿data/raw/
 node_modules/
 .DS_Store
 Thumbs.db
@@ -8,4 +8,12 @@ __pycache__/
 venv/
 .pytest_cache/
 .edge-profile/
-docs/HANDOFF_TO_CHATGPT.md
+
+.edge-screenshot-profile/
+.edge-cdp-profile/
+.chrome-cdp-profile/
+
+.chrome-screenshot-profile*/
+.npm-cache/
+
+HANDOFF_TO_CHATGPT.md
