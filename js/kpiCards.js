@@ -23,7 +23,7 @@ export function initKpiCards() {
 }
 
 export function renderKpiCards(rows, state) {
-  const base = filteredRows(rows, state);
+  const base = filteredRows(rows, state, { includeCountry: false, includeSelectedCountry: false });
   const byCountry = d3.rollups(
     base,
     (items) => d3.sum(items, (row) => getRowValue(row, state)),
@@ -47,11 +47,11 @@ export function renderKpiCards(rows, state) {
   setCard("dominant", dominant ? dominant.disease : "No data", dominant ? `${formatNumber(dominant.share * 100)}% of normalized burden` : context);
   setCard("worsening", yoy.worsening ? yoy.worsening.countryName : "No data", yoy.worsening ? `${formatCompactPercent(yoy.worsening.yoyChangePct)} YoY | ${yearLabel}` : context);
   setCard("improving", yoy.improving ? yoy.improving.countryName : "No data", yoy.improving ? `${formatCompactPercent(yoy.improving.yoyChangePct)} YoY | ${yearLabel}` : context);
-  setStoryInsight({ highest, lowest, dominant, yoy, state, globalScore });
+  setStoryInsight({ highest, lowest, dominant, yoy, state, globalScore, byCountry, rows });
 }
 
 function dominantDisease(rows, state) {
-  const diseaseRows = rows.filter((row) => matchesFilters(row, state, { includeDisease: false, includeSelectedCountry: true }) && row.normalizedScore !== null);
+  const diseaseRows = rows.filter((row) => matchesFilters(row, state, { includeDisease: false, includeCountry: false, includeSelectedCountry: false }) && row.normalizedScore !== null);
   const totals = d3.rollups(
     diseaseRows,
     (items) => d3.sum(items, (row) => row.normalizedScore),
@@ -64,7 +64,7 @@ function dominantDisease(rows, state) {
 
 function yoyExtremes(rows, state) {
   const yoyRows = rows
-    .filter((row) => matchesFilters(row, state))
+    .filter((row) => matchesFilters(row, state, { includeCountry: false, includeSelectedCountry: false }))
     .filter((row) => row.yoyChangePct !== null && Number.isFinite(row.yoyChangePct));
   return {
     worsening: d3.greatest(yoyRows.filter((row) => row.yoyChangePct > 0), (row) => row.yoyChangePct),
@@ -77,7 +77,7 @@ function setCard(key, value, subtitle) {
   d3.select(`[data-kpi-sub="${key}"]`).text(subtitle);
 }
 
-function setStoryInsight({ highest, lowest, dominant, yoy, state, globalScore }) {
+function setStoryInsight({ highest, lowest, dominant, yoy, state, globalScore, byCountry, rows }) {
   const target = d3.select("#story-insight");
   if (target.empty()) return;
 
@@ -88,6 +88,12 @@ function setStoryInsight({ highest, lowest, dominant, yoy, state, globalScore })
 
   const valueLabel = getValueLabel(state);
   const yearLabel = getYearLabel(state);
+  const selectedCountry = state.selectedCountry || (state.country !== "All" ? state.country : null);
+  if (selectedCountry) {
+    target.text(selectedCountryStory({ country: selectedCountry, byCountry, valueLabel, yearLabel, rows, state }));
+    return;
+  }
+
   const diseasePhrase = dominant
     ? `${dominant.disease} contributes the largest share (${formatNumber(dominant.share * 100)}%)`
     : "the leading disease cannot be determined for this selection";
@@ -96,5 +102,39 @@ function setStoryInsight({ highest, lowest, dominant, yoy, state, globalScore })
     ? ` ${yoy.worsening.countryName} is worsening fastest (${formatCompactPercent(yoy.worsening.yoyChangePct)} YoY), while ${yoy.improving.countryName} is improving fastest (${formatCompactPercent(yoy.improving.yoyChangePct)} YoY).`
     : " Year-over-year change is limited for this selection.";
 
-  target.text(`For ${yearLabel}, ${highest.country} has the highest ${valueLabel}${lowPhrase}. ${diseasePhrase}. ${trendPhrase}`);
+  target.text(`Global comparison for ${yearLabel}: ${highest.country} has the highest ${valueLabel}${lowPhrase}. ${diseasePhrase}. ${trendPhrase}`);
+}
+
+function selectedCountryStory({ country, byCountry, valueLabel, yearLabel, rows, state }) {
+  const ranked = [...byCountry].sort((a, b) => d3.descending(a.value, b.value));
+  const index = ranked.findIndex((item) => item.country === country);
+  if (index === -1) {
+    return `Selected-country comparison for ${yearLabel}: ${country} is highlighted on linked charts, but it has no comparable ${valueLabel} record under the other active filters.`;
+  }
+
+  const item = ranked[index];
+  const average = d3.mean(ranked, (entry) => entry.value) || 0;
+  const higherThan = ranked.length - index - 1;
+  const lowerThan = index;
+  const averagePhrase = item.value >= average
+    ? `above the comparison average of ${formatValue(average)}`
+    : `below the comparison average of ${formatValue(average)}`;
+  const disease = selectedCountryDominantDisease(rows, state, country);
+  const diseasePhrase = disease
+    ? ` ${disease.disease} contributes the largest share for this selected country (${formatNumber(disease.share * 100)}%).`
+    : "";
+
+  return `Selected-country comparison for ${yearLabel}: ${country} ranks #${index + 1} of ${ranked.length} countries with ${formatValue(item.value)} ${valueLabel}. It is ${averagePhrase}, higher than ${higherThan} countries and lower than ${lowerThan} countries in the same filtered comparison set.${diseasePhrase}`;
+}
+
+function selectedCountryDominantDisease(rows, state, country) {
+  const diseaseRows = rows.filter((row) => row.countryName === country && matchesFilters(row, state, { includeDisease: false, includeCountry: false, includeSelectedCountry: false }) && row.normalizedScore !== null);
+  const totals = d3.rollups(
+    diseaseRows,
+    (items) => d3.sum(items, (row) => row.normalizedScore),
+    (row) => row.disease,
+  ).map(([disease, value]) => ({ disease, value }));
+  const total = d3.sum(totals, (item) => item.value);
+  const top = d3.greatest(totals, (item) => item.value);
+  return top && total ? { ...top, share: top.value / total } : null;
 }
