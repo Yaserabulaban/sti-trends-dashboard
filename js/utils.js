@@ -1,15 +1,34 @@
+export const chartColors = {
+  primary: "#f97316",
+  primarySoft: "#fed7aa",
+  primaryDark: "#b91c1c",
+  yellow: "#facc15",
+  amber: "#f59e0b",
+  orange: "#f97316",
+  red: "#dc2626",
+  redDark: "#991b1b",
+  neutral: "#f1e5d4",
+  ink: "#24130b",
+  improving: "#f59e0b",
+  worsening: "#dc2626",
+};
+
 export const diseaseColors = new Map([
-  ["HIV", "#5b6ee1"],
-  ["Gonorrhea", "#e28a2f"],
-  ["Syphilis", "#d84f6a"],
+  ["HIV", chartColors.redDark],
+  ["Gonorrhea", chartColors.orange],
+  ["Syphilis", chartColors.yellow],
 ]);
+
+export const burdenColor = d3.interpolateYlOrRd;
 
 export const ALL_METRICS = "__all_metrics__";
 export const ALL_METRICS_LABEL = "All metrics (normalized burden)";
+export const ALL_YEARS = "__all_years__";
+export const ALL_YEARS_LABEL = "All years";
 
 export const regionColors = d3.scaleOrdinal()
   .domain(["Africa", "Americas", "Eastern Mediterranean", "Europe", "South-East Asia", "Western Pacific", "Other/Unknown"])
-  .range(["#2f855a", "#3182ce", "#805ad5", "#dd6b20", "#d53f8c", "#0f766e", "#718096"]);
+  .range(["#991b1b", "#dc2626", "#f97316", "#f59e0b", "#facc15", "#c2410c", "#9a7b5f"]);
 
 export const formatValue = d3.format(",.3~s");
 export const formatNumber = d3.format(",.2f");
@@ -34,6 +53,10 @@ export function getValueMode(state) {
 
 export function getValueLabel(state) {
   return getValueMode(state) === "normalized" ? "Normalized Burden Score" : state.metric || "Selected Metric";
+}
+
+export function getYearLabel(state) {
+  return state.year === ALL_YEARS ? ALL_YEARS_LABEL : state.year;
 }
 
 export function getRowValue(row, state) {
@@ -62,7 +85,7 @@ export function matchesFilters(row, state, options = {}) {
   const activeDisease = getActiveDisease(state);
   if (includeDisease && activeDisease !== "All" && row.disease !== activeDisease) return false;
   if (includeDiseaseType && state.diseaseType !== "All" && row.diseaseType !== state.diseaseType) return false;
-  if (includeYear && row.year !== state.year) return false;
+  if (includeYear && state.year !== ALL_YEARS && row.year !== state.year) return false;
   if (includeYearRange && (row.year < state.yearRange[0] || row.year > state.yearRange[1])) return false;
   if (includeCountry && state.country !== "All" && row.countryName !== state.country) return false;
   if (includeSelectedCountry && state.selectedCountry && row.countryName !== state.selectedCountry) return false;
@@ -91,7 +114,7 @@ export function aggregateBy(rows, keyFn, valueFn = (row) => row.value) {
 
 export function chartSvg(containerSelector, height = 340, margin = { top: 18, right: 28, bottom: 44, left: 62 }) {
   const container = d3.select(containerSelector);
-  container.selectAll("*").remove();
+  container.selectAll("svg").remove();   // scoped removal, leaves controls intact
   const width = Math.max(320, container.node().clientWidth || 640);
   const svg = container.append("svg")
     .attr("viewBox", `0 0 ${width} ${height}`)
@@ -110,7 +133,7 @@ export function emptyState(containerSelector, message) {
 }
 
 export function selectedMetricSubtitle(state) {
-  return `${getValueLabel(state)} | ${state.year} | ${getActiveDisease(state)} | ${getActiveCountry(state) || state.whoRegion}`;
+  return `${getValueLabel(state)} | ${getYearLabel(state)} | ${getActiveDisease(state)} | ${getActiveCountry(state) || state.whoRegion}`;
 }
 
 export function tooltipRows(rows) {

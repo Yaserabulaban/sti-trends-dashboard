@@ -1,21 +1,17 @@
-import { setState } from "./state.js";
-import { chartSvg, diseaseColors, emptyState, filteredRows, formatCompactPercent, formatValue, getRowValue, getValueLabel, regionColors, tooltipRows } from "./utils.js";
-import { hideTooltip, moveTooltip, showTooltip } from "./tooltip.js";
+import { setState } from "./state.js?v=dashboard-story-tooltip-20260705";
+import { ALL_YEARS, chartColors, chartSvg, diseaseColors, emptyState, filteredRows, formatCompactPercent, formatValue, getRowValue, getValueLabel, getYearLabel, regionColors, tooltipRows } from "./utils.js?v=dashboard-story-tooltip-20260705";
+import { hideTooltip, moveTooltip, showTooltip } from "./tooltip.js?v=dashboard-story-tooltip-20260705";
 
 let timer = null;
 
 export function initAnimatedBubbleChart() {
-  d3.select("#bubble-play").on("click", () => {
-    stopTimer();
-    timer = setInterval(() => {
-      const slider = d3.select("#bubble-year-slider");
-      const current = +slider.property("value");
-      const next = current >= 2024 ? 1990 : current + 1;
-      slider.property("value", next);
-      setState({ year: next });
-    }, 900);
+  d3.select("#bubble-toggle").on("click", () => {
+    if (timer) {
+      stopTimer();
+      return;
+    }
+    startTimer();
   });
-  d3.select("#bubble-pause").on("click", stopTimer);
   d3.select("#bubble-year-slider").on("input", (event) => {
     stopTimer();
     setState({ year: +event.target.value });
@@ -23,9 +19,17 @@ export function initAnimatedBubbleChart() {
 }
 
 export function renderAnimatedBubbleChart(rows, state) {
-  d3.select("#bubble-year-slider").property("value", state.year);
-  d3.select("#bubble-year-label").text(state.year);
-  d3.select("#bubble-subtitle").text(`${getValueLabel(state)} vs YoY change | ${state.year}`);
+  const yearLabel = getYearLabel(state);
+  const isAllYears = state.year === ALL_YEARS;
+  const sliderYear = state.year === ALL_YEARS ? state.yearRange[1] : state.year;
+  if (isAllYears && timer) stopTimer();
+  d3.select(".bubble-controls").classed("all-years-mode", isAllYears);
+  d3.select("#bubble-year-slider").property("value", sliderYear).property("disabled", isAllYears);
+  d3.select("#bubble-toggle").property("disabled", isAllYears);
+  d3.select("#bubble-year-label").text(yearLabel);
+  d3.select("#bubble-toggle").text(timer ? "Pause" : "Play");
+  d3.select("#bubble-all-years-note").text("Aggregated across all years");
+  d3.select("#bubble-subtitle").text(`${getValueLabel(state)} vs YoY change | ${yearLabel}`);
 
   const current = filteredRows(rows, state, { includeSelectedCountry: false });
   const bubbles = d3.rollups(
@@ -55,7 +59,7 @@ export function renderAnimatedBubbleChart(rows, state) {
     ? d3.scaleLinear().domain(d3.extent(bubbles, (d) => Number.isFinite(d.yoy) ? d.yoy : 0)).nice().range([innerHeight, 0])
     : d3.scaleLinear().domain([0.8, 4.2]).range([innerHeight, 0]);
   const r = d3.scaleSqrt().domain([0, d3.max(bubbles, (d) => d.value) || 1]).range([4, 28]);
-  const color = state.disease === "All" ? (d) => diseaseColors.get(d.row.disease) || "#1261a0" : (d) => regionColors(d.row.whoRegion);
+  const color = state.disease === "All" ? (d) => diseaseColors.get(d.row.disease) || chartColors.primary : (d) => regionColors(d.row.whoRegion);
 
   g.append("g").attr("class", "axis").attr("transform", `translate(0,${innerHeight})`).call(d3.axisBottom(x).ticks(6).tickFormat(formatValue));
   g.append("g").attr("class", "axis").call(d3.axisLeft(y).ticks(6).tickFormat(hasYoy ? (d) => formatCompactPercent(d) : d3.format(".1f")));
@@ -70,13 +74,13 @@ export function renderAnimatedBubbleChart(rows, state) {
     .attr("r", (d) => r(d.value))
     .attr("fill", color)
     .attr("fill-opacity", 0.72)
-    .attr("stroke", (d) => d.row.countryName === state.selectedCountry ? "#111827" : "#ffffff")
+    .attr("stroke", (d) => d.row.countryName === state.selectedCountry ? chartColors.ink : "#ffffff")
     .attr("stroke-width", (d) => d.row.countryName === state.selectedCountry ? 2.5 : 1)
     .on("mousemove", (event, d) => {
       showTooltip(event, `<strong>${d.row.countryName}</strong>${tooltipRows([
         ["Disease", d.row.disease],
         ["WHO Region", d.row.whoRegion],
-        ["Year", state.year],
+        ["Year", yearLabel],
         [getValueLabel(state), formatValue(d.value)],
         ["YoY Change", Number.isFinite(d.yoy) ? formatCompactPercent(d.yoy) : "Unavailable"],
         ["Burden Tier", d.row.burdenTier],
@@ -87,7 +91,20 @@ export function renderAnimatedBubbleChart(rows, state) {
     .on("click", (event, d) => setState({ selectedCountry: d.row.countryName, country: d.row.countryName }));
 }
 
+function startTimer() {
+  stopTimer();
+  d3.select("#bubble-toggle").text("Pause");
+  timer = setInterval(() => {
+    const slider = d3.select("#bubble-year-slider");
+    const current = +slider.property("value");
+    const next = current >= 2024 ? 1990 : current + 1;
+    slider.property("value", next);
+    setState({ year: next });
+  }, 900);
+}
+
 function stopTimer() {
   if (timer) clearInterval(timer);
   timer = null;
+  d3.select("#bubble-toggle").text("Play");
 }

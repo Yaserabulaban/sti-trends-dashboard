@@ -10,59 +10,64 @@
   <header class="page-header">
     <div>
       <h1>Global STI Trends Dashboard</h1>
-      <p>Interactive SDG 3 monitoring of HIV, gonorrhea, and syphilis burden across countries, WHO regions, and time.</p>
+      <p>Use this SDG 3 dashboard to find where STI burden is concentrated, which disease contributes most, and which countries are improving or worsening over time.</p>
     </div>
     <div class="status-pill" id="mode-label">Loading data</div>
   </header>
 
   <main>
+    <section class="story-panel" aria-label="Dashboard purpose">
+      <div class="story-primary">
+        <p class="eyebrow">Decision purpose</p>
+        <h2>Explore global STI burden through the charts below.</h2>
+        <p>Each visualization answers its nearby analytical question, moving from geographic burden to trends, yearly change, and disease contribution for SDG 3.</p>
+      </div>
+    </section>
+
     <section class="filter-panel" aria-label="Dashboard filters">
       <label>
-        <span>Metric / Indicator</span>
+        <span>Metric / Indicator <span class="info-dot" title="Choose the measurement used across the dashboard. All metrics combines diseases by normalized burden score so incompatible raw units are not mixed.">ⓘ</span></span>
         <select id="metric-filter"></select>
       </label>
       <label>
-        <span>Disease</span>
+        <span>Disease <span class="info-dot" title="Limit the dashboard to HIV, gonorrhea, syphilis, or show all diseases together.">ⓘ</span></span>
         <select id="disease-filter"></select>
       </label>
       <label>
-        <span>Disease Type</span>
+        <span>Disease Type <span class="info-dot" title="Filter by the disease category available for the selected disease.">ⓘ</span></span>
         <select id="disease-type-filter"></select>
       </label>
       <label>
-        <span>Year</span>
+        <span>Year <span class="info-dot" title="Select the year used by map, KPI, ranked bar, bubble, donut, and lollipop views.">ⓘ</span></span>
         <select id="year-filter"></select>
       </label>
       <label>
-        <span>From</span>
-        <input id="year-start-filter" type="number" min="1990" max="2024" step="1">
-      </label>
-      <label>
-        <span>To</span>
-        <input id="year-end-filter" type="number" min="1990" max="2024" step="1">
-      </label>
-      <label>
-        <span>Country</span>
+        <span>Country <span class="info-dot" title="Focus charts on one country. Chart clicks also update this selection.">ⓘ</span></span>
         <select id="country-filter"></select>
       </label>
       <label>
-        <span>WHO Region</span>
+        <span>WHO Region <span class="info-dot" title="Limit countries to one WHO region. Selecting a region clears the selected country.">ⓘ</span></span>
         <select id="region-filter"></select>
       </label>
       <label>
-        <span>Burden Tier</span>
+        <span>Burden Tier <span class="info-dot" title="Filter rows by the prepared burden tier classification in the dataset.">ⓘ</span></span>
         <select id="tier-filter"></select>
       </label>
       <button id="reset-filters" type="button">Reset Filters</button>
     </section>
 
     <section class="kpi-grid" id="kpi-cards" aria-label="KPI cards"></section>
+    <section class="insight-panel" aria-label="Current dashboard insight">
+      <p class="eyebrow">Current story</p>
+      <p id="story-insight">Loading the current burden pattern...</p>
+    </section>
 
     <section class="chart-grid">
       <article class="chart-panel map-panel">
         <div class="chart-heading">
           <div>
             <h2>Choropleth World Map</h2>
+            <p class="chart-question">Which countries and WHO regions have the highest STI burden for HIV, gonorrhea, and syphilis in a selected year?</p>
             <p id="map-subtitle"></p>
           </div>
           <button class="small-button" id="map-reset" type="button">Reset Zoom</button>
@@ -74,8 +79,26 @@
         <div class="chart-heading">
           <div>
             <h2>Ranked Country Bar Chart</h2>
+            <p class="chart-question">Which countries and WHO regions have the highest STI burden for HIV, gonorrhea, and syphilis in a selected year?</p>
             <p id="bar-subtitle"></p>
           </div>
+        </div>
+        <div class="chart-controls compact-controls" aria-label="Ranked bar controls">
+          <label>
+            <span>Sort <span class="info-dot" title="Highest first shows countries with the largest selected value. Lowest first reverses the ranking.">ⓘ</span></span>
+            <select id="bar-sort-filter">
+              <option value="desc">Highest first</option>
+              <option value="asc">Lowest first</option>
+            </select>
+          </label>
+          <label>
+            <span>Show <span class="info-dot" title="Choose how many countries appear in the ranked bar chart.">ⓘ</span></span>
+            <select id="bar-limit-filter">
+              <option value="10" selected>Top 10</option>
+              <option value="15">Top 15</option>
+              <option value="25">Top 25</option>
+            </select>
+          </label>
         </div>
         <div class="chart-body" id="ranked-bar-chart"></div>
       </article>
@@ -84,8 +107,20 @@
         <div class="chart-heading">
           <div>
             <h2>Multi-Line Time-Series Chart</h2>
+            <p class="chart-question">How have STI indicators changed from 1990 to 2024 across countries and diseases?</p>
             <p id="time-subtitle"></p>
           </div>
+        </div>
+        <div class="chart-controls range-controls" aria-label="Time range controls">
+          <label>
+            <span>From year <span class="info-dot" title="Start year for the time-series chart. You can also brush the time-series plot to update this range.">ⓘ</span></span>
+            <input id="year-start-filter" type="number" min="1990" max="2024" step="1">
+          </label>
+          <label>
+            <span>To year <span class="info-dot" title="End year for the time-series chart. This range does not change the single-year map or bar chart.">ⓘ</span></span>
+            <input id="year-end-filter" type="number" min="1990" max="2024" step="1">
+          </label>
+          <button id="apply-year-range" class="small-button" type="button">Apply Range</button>
         </div>
         <div class="chart-body" id="time-series-chart"></div>
       </article>
@@ -94,14 +129,15 @@
         <div class="chart-heading">
           <div>
             <h2>Animated Bubble Chart</h2>
+            <p class="chart-question">How have STI indicators changed from 1990 to 2024 across countries and diseases?</p>
             <p id="bubble-subtitle"></p>
           </div>
         </div>
         <div class="bubble-controls">
-          <button id="bubble-play" type="button">Play</button>
-          <button id="bubble-pause" type="button">Pause</button>
+          <button id="bubble-toggle" type="button">Play</button>
           <input id="bubble-year-slider" type="range" min="1990" max="2024" step="1">
           <span id="bubble-year-label">2024</span>
+          <span id="bubble-all-years-note">Aggregated across all years</span>
         </div>
         <div class="chart-body" id="animated-bubble-chart"></div>
       </article>
@@ -110,6 +146,7 @@
         <div class="chart-heading">
           <div>
             <h2>Year-over-Year Lollipop Chart</h2>
+            <p class="chart-question">Which countries show the fastest worsening or improvement in STI indicators based on year-over-year change?</p>
             <p id="lollipop-subtitle"></p>
           </div>
         </div>
@@ -120,6 +157,7 @@
         <div class="chart-heading">
           <div>
             <h2>Disease Share Donut Chart</h2>
+            <p class="chart-question">Which STI contributes the largest share of the selected health indicator under different filters?</p>
             <p id="donut-subtitle">Disease Share by Normalized Burden Score</p>
           </div>
         </div>
@@ -136,6 +174,6 @@
   <div id="tooltip" class="tooltip" role="status" aria-live="polite"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/main.js?v=dashboard-story-tooltip-20260705"></script>
 </body>
 </html>

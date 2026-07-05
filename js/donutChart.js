@@ -1,6 +1,6 @@
-import { setState } from "./state.js";
-import { chartSvg, diseaseColors, emptyState, formatNumber, matchesFilters, tooltipRows } from "./utils.js";
-import { hideTooltip, moveTooltip, showTooltip } from "./tooltip.js";
+import { setState } from "./state.js?v=dashboard-story-tooltip-20260705";
+import { chartSvg, diseaseColors, emptyState, formatNumber, matchesFilters, tooltipRows } from "./utils.js?v=dashboard-story-tooltip-20260705";
+import { hideTooltip, moveTooltip, showTooltip } from "./tooltip.js?v=dashboard-story-tooltip-20260705";
 
 const diseases = ["HIV", "Gonorrhea", "Syphilis"];
 

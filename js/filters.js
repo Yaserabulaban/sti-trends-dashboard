@@ -1,5 +1,5 @@
-import { dashboardState, resetState, setState } from "./state.js";
-import { ALL_METRICS, ALL_METRICS_LABEL, getActiveDisease, uniqueSorted } from "./utils.js";
+import { dashboardState, resetState, setState } from "./state.js?v=dashboard-story-tooltip-20260705";
+import { ALL_METRICS, ALL_METRICS_LABEL, ALL_YEARS, ALL_YEARS_LABEL, getActiveDisease, uniqueSorted } from "./utils.js?v=dashboard-story-tooltip-20260705";
 
 const ids = {
   metric: "#metric-filter",
@@ -20,9 +20,13 @@ export function initFilters(rows) {
   d3.select(ids.metric).on("change", (event) => setState({ metric: event.target.value }));
   d3.select(ids.disease).on("change", (event) => setState({ disease: event.target.value, selectedDisease: null }));
   d3.select(ids.diseaseType).on("change", (event) => setState({ diseaseType: event.target.value }));
-  d3.select(ids.year).on("change", (event) => setState({ year: +event.target.value }));
+  d3.select(ids.year).on("change", (event) => {
+    const value = event.target.value;
+    setState({ year: value === ALL_YEARS ? ALL_YEARS : +value });
+  });
   d3.select(ids.yearStart).on("change", handleYearRange);
   d3.select(ids.yearEnd).on("change", handleYearRange);
+  d3.select("#apply-year-range").on("click", handleYearRange);
   d3.select(ids.country).on("change", (event) => {
     const country = event.target.value;
     setState({ country, selectedCountry: country === "All" ? null : country });
@@ -45,7 +49,7 @@ export function renderFilters() {
   });
   const metricValues = uniqueSorted(metricRows.map((row) => row.metric));
   const metrics = dashboardState.disease === "All" ? [ALL_METRICS, ...metricValues] : metricValues;
-  const years = uniqueSorted(cachedRows.map((row) => row.year)).map(String);
+  const years = [ALL_YEARS, ...uniqueSorted(cachedRows.map((row) => row.year)).map(String)];
   const countries = ["All", ...uniqueSorted(cachedRows.map((row) => row.countryName))];
   const regions = ["All", ...uniqueSorted(cachedRows.map((row) => row.whoRegion))];
   const tiers = ["All", ...uniqueSorted(cachedRows.map((row) => row.burdenTier))];
@@ -80,7 +84,11 @@ function setOptions(selector, values, selected) {
     .append("option")
     .merge(selection)
     .attr("value", (value) => value)
-    .text((value) => value === ALL_METRICS ? ALL_METRICS_LABEL : value);
+    .text((value) => {
+      if (value === ALL_METRICS) return ALL_METRICS_LABEL;
+      if (value === ALL_YEARS) return ALL_YEARS_LABEL;
+      return value;
+    });
 
   selection.exit().remove();
   d3.select(selector).property("value", selected);
@@ -89,5 +97,6 @@ function setOptions(selector, values, selected) {
 function handleYearRange() {
   const start = +d3.select(ids.yearStart).property("value");
   const end = +d3.select(ids.yearEnd).property("value");
+  if (!Number.isFinite(start) || !Number.isFinite(end)) return;
   setState({ yearRange: [Math.min(start, end), Math.max(start, end)] });
 }

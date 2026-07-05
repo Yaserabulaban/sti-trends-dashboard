@@ -1,15 +1,15 @@
-import { initAnimatedBubbleChart, renderAnimatedBubbleChart } from "./animatedBubbleChart.js";
-import { initChoroplethMap, renderChoroplethMap } from "./choroplethMap.js";
-import { loadDashboardData } from "./dataLoader.js";
-import { renderDonutChart } from "./donutChart.js";
-import { initFilters, renderFilters } from "./filters.js";
-import { initKpiCards, renderKpiCards } from "./kpiCards.js";
-import { renderLollipopChart } from "./lollipopChart.js";
-import { renderRankedBarChart } from "./rankedBarChart.js";
-import { dashboardState, subscribe } from "./state.js";
-import { renderTimeSeriesChart } from "./timeSeriesChart.js";
-import { getValueLabel } from "./utils.js";
-import { initTooltip } from "./tooltip.js";
+import { initAnimatedBubbleChart, renderAnimatedBubbleChart } from "./animatedBubbleChart.js?v=dashboard-story-tooltip-20260705";
+import { initChoroplethMap, renderChoroplethMap } from "./choroplethMap.js?v=dashboard-story-tooltip-20260705";
+import { loadDashboardData } from "./dataLoader.js?v=dashboard-story-tooltip-20260705";
+import { renderDonutChart } from "./donutChart.js?v=dashboard-story-tooltip-20260705";
+import { initFilters, renderFilters } from "./filters.js?v=dashboard-story-tooltip-20260705";
+import { initKpiCards, renderKpiCards } from "./kpiCards.js?v=dashboard-story-tooltip-20260705";
+import { renderLollipopChart } from "./lollipopChart.js?v=dashboard-story-tooltip-20260705";
+import { initRankedBarChart, renderRankedBarChart } from "./rankedBarChart.js?v=dashboard-story-tooltip-20260705";
+import { dashboardState, subscribe } from "./state.js?v=dashboard-story-tooltip-20260705";
+import { renderTimeSeriesChart } from "./timeSeriesChart.js?v=dashboard-story-tooltip-20260705";
+import { ALL_YEARS, getValueLabel } from "./utils.js?v=dashboard-story-tooltip-20260705";
+import { initTooltip } from "./tooltip.js?v=dashboard-story-tooltip-20260705";
 
 let dashboardData = null;
 
@@ -23,6 +23,7 @@ async function start() {
   initFilters(dashboardData.rows);
   initKpiCards();
   initChoroplethMap();
+  initRankedBarChart();
   initAnimatedBubbleChart();
   applyInitialQueryParams(dashboardData.rows);
 
@@ -66,7 +67,9 @@ function applyInitialQueryParams(rows) {
     dashboardState.disease = disease;
     dashboardState.selectedDisease = disease;
   }
-  if (year && Number.isFinite(+year)) {
+  if (year === ALL_YEARS) {
+    dashboardState.year = ALL_YEARS;
+  } else if (year && Number.isFinite(+year)) {
     dashboardState.year = +year;
   }
 }

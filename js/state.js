@@ -10,6 +10,8 @@ export const defaultState = {
   selectedCountry: null,
   selectedDisease: null,
   mode: "normalized",
+  barSort: "desc",
+  barLimit: 10,
 };
 
 export const dashboardState = { ...defaultState };

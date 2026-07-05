@@ -288,6 +288,7 @@ The raw CSV should stay in `data/raw/` and is ignored from Git. Use the processe
 
 - Global filters for metric, disease, disease type, year, year range, country, WHO region, and burden tier
 - KPI cards for global burden score, highest burden country, lowest burden country, dominant disease, fastest worsening country, and fastest improving country
+- Storytelling panel that states the dashboard purpose, analytical questions, design principles, and the current filter-driven insight
 - Shared dashboard state across all filters and charts
 - Reusable tooltip component across visualizations
 - Linked country selection across map, bar chart, bubble chart, time series, lollipop chart, and KPIs
@@ -296,6 +297,32 @@ The raw CSV should stay in `data/raw/` and is ignored from Git. Use the processe
 - Time-series brush for year-range focus
 - Animated bubble chart with play, pause, and year slider
 - Responsive CSS grid layout for laptop and smaller screens
+
+## Analytical Questions
+
+The dashboard is designed to answer four analytical questions required by the project specification:
+
+1. Which countries and WHO regions have the highest STI burden for HIV, gonorrhea, and syphilis in a selected year?
+2. How have STI indicators changed from 1990 to 2024 across countries and diseases?
+3. Which countries show the fastest worsening or improvement in STI indicators based on year-over-year change?
+4. Which STI contributes the largest share of the selected health indicator under different filters?
+
+These questions guide the chart sequence. The map, ranked bar chart, and KPI cards locate geographical burden. The time-series and animated bubble chart explain long-term change. The lollipop chart and change KPI cards identify fastest worsening and improvement. The donut chart explains disease contribution using normalized burden scores.
+
+## Data Storytelling Flow
+
+The page is arranged as a guided SDG 3 story rather than separate charts. The user first sees the decision purpose, then each analytical question is placed directly beside the relevant chart. After choosing filters, the KPI summaries and generated current insight update the same story. The visualizations move from geographic overview to country ranking, long-term trend, animated progression, year-over-year change, and disease composition.
+
+This flow supports monitoring and prioritization: users can identify high-burden countries, check whether the pattern is disease-specific or cross-disease, and then inspect whether recent change suggests improvement or worsening.
+
+## Visualization Design Principles
+
+The dashboard follows four practical principles adapted from common data visualization guidance such as clear purpose, context, consistency, and connected interaction:
+
+- Clear: each chart includes the analytical question it answers, and chart subtitles repeat the selected metric and year.
+- Clean: cross-disease comparisons use normalized burden scores instead of silently mixing incompatible raw indicators.
+- Connected: filters and chart clicks update the same dashboard state, so the map, ranking, KPIs, and trend views tell one coordinated story.
+- Contextual: tooltips, KPI subtitles, legends, and the current-story panel explain what the selected view means.
 
 ## Visualizations
 
