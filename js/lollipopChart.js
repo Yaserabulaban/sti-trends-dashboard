@@ -1,5 +1,5 @@
 import { setState } from "./state.js";
-import { chartContextSubtitle, chartSvg, emptyState, formatCompactPercent, formatValue, getValueLabel, matchesFilters, tooltipRows } from "./utils.js";
+import { chartColors, chartContextSubtitle, chartSvg, emptyState, formatCompactPercent, formatValue, getValueLabel, matchesFilters, tooltipRows } from "./utils.js";
 import { hideTooltip, moveTooltip, showTooltip } from "./tooltip.js";
 
 export function renderLollipopChart(rows, state) {
@@ -37,7 +37,7 @@ export function renderLollipopChart(rows, state) {
   const x = d3.scaleLinear().domain([-pad, pad]).nice().range([0, innerWidth]);
   const y = d3.scaleBand().domain(data.map((d) => d.country)).range([0, innerHeight]).padding(0.35);
 
-  g.append("line").attr("x1", x(0)).attr("x2", x(0)).attr("y1", 0).attr("y2", innerHeight).attr("stroke", "#667085").attr("stroke-dasharray", "4 3");
+  g.append("line").attr("x1", x(0)).attr("x2", x(0)).attr("y1", 0).attr("y2", innerHeight).attr("stroke", "#7a869a").attr("stroke-dasharray", "4 3");
   g.append("g").attr("class", "axis").call(d3.axisLeft(y).tickSize(0));
   g.append("g").attr("class", "axis").attr("transform", `translate(0,${innerHeight})`).call(d3.axisBottom(x).ticks(6).tickFormat(formatCompactPercent));
   g.append("text").attr("x", innerWidth / 2).attr("y", innerHeight + 38).attr("text-anchor", "middle").attr("class", "chart-title-note").text("Year-over-Year Change (%)");
@@ -50,7 +50,7 @@ export function renderLollipopChart(rows, state) {
     .attr("x2", (d) => x(d.yoy))
     .attr("y1", (d) => y(d.country) + y.bandwidth() / 2)
     .attr("y2", (d) => y(d.country) + y.bandwidth() / 2)
-    .attr("stroke", (d) => d.yoy >= 0 ? "#c8543b" : "#268b5f")
+    .attr("stroke", (d) => d.yoy >= 0 ? chartColors.worsening : chartColors.improving)
     .attr("stroke-width", 2);
 
   g.selectAll("circle")
@@ -59,8 +59,8 @@ export function renderLollipopChart(rows, state) {
     .attr("cx", (d) => x(d.yoy))
     .attr("cy", (d) => y(d.country) + y.bandwidth() / 2)
     .attr("r", (d) => d.country === state.selectedCountry ? 8 : 6)
-    .attr("fill", (d) => d.yoy >= 0 ? "#c8543b" : "#268b5f")
-    .attr("stroke", (d) => d.country === state.selectedCountry ? "#111827" : "#ffffff")
+    .attr("fill", (d) => d.yoy >= 0 ? chartColors.worsening : chartColors.improving)
+    .attr("stroke", (d) => d.country === state.selectedCountry ? chartColors.ink : "#ffffff")
     .attr("stroke-width", (d) => d.country === state.selectedCountry ? 2.5 : 1)
     .attr("cursor", "pointer")
     .on("mousemove", (event, d) => {

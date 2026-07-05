@@ -1,5 +1,5 @@
 import { setState } from "./state.js";
-import { chartContextSubtitle, chartSvg, emptyState, filteredRows, formatValue, getActiveCountry, getRowValue, getValueLabel, tooltipRows, diseaseColors, regionColors } from "./utils.js";
+import { chartColors, chartContextSubtitle, chartSvg, diseaseColors, emptyState, filteredRows, formatValue, getActiveCountry, getRowValue, getValueLabel, tooltipRows, regionColors } from "./utils.js";
 import { hideTooltip, moveTooltip, showTooltip } from "./tooltip.js";
 
 export function renderTimeSeriesChart(rows, state) {
@@ -37,7 +37,7 @@ export function renderTimeSeriesChart(rows, state) {
   const x = d3.scaleLinear().domain(state.yearRange).range([0, innerWidth]);
   const y = d3.scaleLinear().domain([0, d3.max(nested, (series) => d3.max(series.values, (d) => d.value)) || 1]).nice().range([innerHeight, 0]);
   const line = d3.line().x((d) => x(d.year)).y((d) => y(d.value)).defined((d) => Number.isFinite(d.value));
-  const color = groupMode === "region" ? regionColors : (key) => diseaseColors.get(key) || "#1261a0";
+  const color = groupMode === "region" ? regionColors : (key) => diseaseColors.get(key) || chartColors.primary;
 
   g.append("g").attr("class", "axis").attr("transform", `translate(0,${innerHeight})`).call(d3.axisBottom(x).tickFormat(d3.format("d")));
   g.append("g").attr("class", "axis").call(d3.axisLeft(y).ticks(6).tickFormat(formatValue));

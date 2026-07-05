@@ -11,12 +11,20 @@
   <header class="page-header">
     <div>
       <h1>Global STI Trends Dashboard</h1>
-      <p>Interactive SDG 3 monitoring of HIV, gonorrhea, and syphilis burden across countries, WHO regions, and time.</p>
+      <p>Use this SDG 3 dashboard to find where STI burden is concentrated, which disease contributes most, and which countries are improving or worsening over time.</p>
     </div>
     <div class="status-pill" id="mode-label">Loading data</div>
   </header>
 
   <main>
+    <section class="story-panel" aria-label="Dashboard purpose">
+      <div class="story-primary">
+        <p class="eyebrow">Decision purpose</p>
+        <h2>Explore global STI burden through the charts below.</h2>
+        <p>Each visualization answers its nearby analytical question, moving from geographic burden to trends, yearly change, and disease contribution for SDG 3.</p>
+      </div>
+    </section>
+
     <section class="filter-panel" aria-label="Dashboard filters">
       <label>
         <span>Metric / Indicator</span>
@@ -35,14 +43,6 @@
         <select id="year-filter"></select>
       </label>
       <label>
-        <span>From</span>
-        <input id="year-start-filter" type="number" min="1990" max="2024" step="1">
-      </label>
-      <label>
-        <span>To</span>
-        <input id="year-end-filter" type="number" min="1990" max="2024" step="1">
-      </label>
-      <label>
         <span>Country</span>
         <select id="country-filter"></select>
       </label>
@@ -58,12 +58,17 @@
     </section>
 
     <section class="kpi-grid" id="kpi-cards" aria-label="KPI cards"></section>
+    <section class="insight-panel" aria-label="Current dashboard insight">
+      <p class="eyebrow">Current story</p>
+      <p id="story-insight">Loading the current burden pattern...</p>
+    </section>
 
     <section class="chart-grid">
       <article class="chart-panel map-panel">
         <div class="chart-heading">
           <div>
             <h2>Choropleth World Map</h2>
+            <p class="chart-question">Which countries and WHO regions have the highest STI burden for HIV, gonorrhea, and syphilis in a selected year?</p>
             <p id="map-subtitle"></p>
             <p class="chart-hint">Scroll or drag to zoom and pan; click a country to select it.</p>
           </div>
@@ -79,10 +84,28 @@
         <div class="chart-heading">
           <div>
             <h2>Ranked Country Bar Chart</h2>
+            <p class="chart-question">Which countries and WHO regions have the highest STI burden for HIV, gonorrhea, and syphilis in a selected year?</p>
             <p id="bar-subtitle"></p>
             <p class="chart-hint">Click a bar to select a country.</p>
           </div>
           <button class="small-button chart-clear-filters" type="button">Clear Filters</button>
+        </div>
+        <div class="chart-controls compact-controls" aria-label="Ranked bar controls">
+          <label>
+            <span>Sort</span>
+            <select id="bar-sort-filter">
+              <option value="desc">Highest first</option>
+              <option value="asc">Lowest first</option>
+            </select>
+          </label>
+          <label>
+            <span>Show</span>
+            <select id="bar-limit-filter">
+              <option value="10" selected>Top 10</option>
+              <option value="15">Top 15</option>
+              <option value="25">Top 25</option>
+            </select>
+          </label>
         </div>
         <div class="chart-body" id="ranked-bar-chart"></div>
       </article>
@@ -91,13 +114,24 @@
         <div class="chart-heading">
           <div>
             <h2>Multi-Line Time-Series Chart</h2>
+            <p class="chart-question">How have STI indicators changed from 1990 to 2024 across countries and diseases?</p>
             <p id="time-subtitle"></p>
             <p class="chart-hint">Brush across the plot to focus years.</p>
           </div>
           <div class="chart-actions">
             <button class="small-button" id="time-reset-range" type="button">Reset Range</button>
-            <button class="small-button chart-clear-filters" type="button">Clear Filters</button>
           </div>
+        </div>
+        <div class="chart-controls range-controls" aria-label="Time range controls">
+          <label>
+            <span>From year</span>
+            <input id="year-start-filter" type="number" min="1990" max="2024" step="1">
+          </label>
+          <label>
+            <span>To year</span>
+            <input id="year-end-filter" type="number" min="1990" max="2024" step="1">
+          </label>
+          <button id="apply-year-range" class="small-button" type="button">Apply Range</button>
         </div>
         <div class="chart-body" id="time-series-chart"></div>
       </article>
@@ -106,16 +140,17 @@
         <div class="chart-heading">
           <div>
             <h2>Animated Bubble Chart</h2>
+            <p class="chart-question">How have STI indicators changed from 1990 to 2024 across countries and diseases?</p>
             <p id="bubble-subtitle"></p>
             <p class="chart-hint">Use Play or the slider to animate years; click a bubble to select a country.</p>
           </div>
           <button class="small-button chart-clear-filters" type="button">Clear Filters</button>
         </div>
         <div class="bubble-controls">
-          <button id="bubble-play" type="button">Play</button>
-          <button id="bubble-pause" type="button">Pause</button>
+          <button id="bubble-toggle" type="button">Play</button>
           <input id="bubble-year-slider" type="range" min="1990" max="2024" step="1">
           <span id="bubble-year-label">2024</span>
+          <span id="bubble-all-years-note">Aggregated across all years</span>
         </div>
         <div class="chart-body" id="animated-bubble-chart"></div>
       </article>
@@ -124,6 +159,7 @@
         <div class="chart-heading">
           <div>
             <h2>Year-over-Year Lollipop Chart</h2>
+            <p class="chart-question">Which countries show the fastest worsening or improvement in STI indicators based on year-over-year change?</p>
             <p id="lollipop-subtitle"></p>
             <p class="chart-hint">Click a dot to select a country.</p>
           </div>
@@ -136,6 +172,7 @@
         <div class="chart-heading">
           <div>
             <h2>Disease Share Donut Chart</h2>
+            <p class="chart-question">Which STI contributes the largest share of the selected health indicator under different filters?</p>
             <p id="donut-subtitle">Disease Share by Normalized Burden Score</p>
             <p class="chart-hint">Click a segment to filter by disease.</p>
           </div>

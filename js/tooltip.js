@@ -7,7 +7,7 @@ export function initTooltip(selector = "#tooltip") {
 
 export function showTooltip(event, html) {
   if (!tooltip) initTooltip();
-  tooltip.html(html).style("opacity", 1);
+  tooltip.html(html).style("opacity", 1).style("visibility", "visible");
   moveTooltip(event);
 }
 
@@ -26,5 +26,5 @@ export function moveTooltip(event) {
 
 export function hideTooltip() {
   if (!tooltip) return;
-  tooltip.style("opacity", 0).style("transform", "translate(-9999px, -9999px)");
+  tooltip.style("opacity", 0).style("visibility", "hidden").style("transform", "translate(-9999px, -9999px)");
 }

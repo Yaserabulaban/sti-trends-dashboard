@@ -5,10 +5,10 @@ import { renderDonutChart } from "./donutChart.js";
 import { initFilters, renderFilters } from "./filters.js";
 import { initKpiCards, renderKpiCards } from "./kpiCards.js";
 import { renderLollipopChart } from "./lollipopChart.js";
-import { renderRankedBarChart } from "./rankedBarChart.js";
+import { initRankedBarChart, renderRankedBarChart } from "./rankedBarChart.js";
 import { dashboardState, resetState, subscribe } from "./state.js";
 import { renderTimeSeriesChart } from "./timeSeriesChart.js";
-import { getValueLabel } from "./utils.js";
+import { ALL_YEARS, getValueLabel } from "./utils.js";
 import { initTooltip } from "./tooltip.js";
 
 let dashboardData = null;
@@ -23,6 +23,7 @@ async function start() {
   initFilters(dashboardData.rows);
   initKpiCards();
   initChoroplethMap();
+  initRankedBarChart();
   initAnimatedBubbleChart();
   initChartClearFilters();
   applyInitialQueryParams(dashboardData.rows);
@@ -71,7 +72,9 @@ function applyInitialQueryParams(rows) {
     dashboardState.disease = disease;
     dashboardState.selectedDisease = disease;
   }
-  if (year && Number.isFinite(+year)) {
+  if (year === ALL_YEARS) {
+    dashboardState.year = ALL_YEARS;
+  } else if (year && Number.isFinite(+year)) {
     dashboardState.year = +year;
   }
 }
